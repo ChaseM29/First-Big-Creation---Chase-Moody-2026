@@ -1,18 +1,19 @@
-﻿# The script of the game goes in this file.
-
-# Declare characters used by this game. The color argument colorizes the
-# name of the character.
-
-define m = Character("Mom")
+﻿define m = Character("Mom")
 define c = Character("Me")
 
-image Mom:
-    "mom.svg"
-    zoom 2
-
-image Money:
-    "money.png"
+image handMain:
+    "handMain.png"
     zoom .3
+
+image firstRoom:
+    "test.png"
+    zoom .5
+
+image Mom:
+    "mom.png"
+    zoom .3
+
+
 
 
 
@@ -21,19 +22,8 @@ image Money:
 
 label start:
 
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
 
-    scene Money
-
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
-
-    show Mom
-
-    # These display lines of dialogue.
+    show Mom at left
 
     c "I'm 16 at this point I'm too old for bedtime stories."
 
@@ -47,7 +37,7 @@ label start:
 
     m "..."
 
-    c "C'mon mom that's hardly a story."
+    c "That's hardly a story."
 
     m "Goodnight honey."
 
@@ -59,19 +49,26 @@ label start:
 
     menu:
         "Go to sleep":
-            jump choice_1
+            jump sleep
 
         "Check the closet":
-            jump choice_2
+            jump checking
     return
 
 
-label choice_1:
+label sleep:
     scene black with fade
     "{b}Game over{/b}."
     return
 
-label choice_2:
+label checking:
+    scene black with fade
     play sound "audio/gettingup.mp3"
+    scene test with fade:
+        xysize(1920, 1080)
+    show handMain:
+        xalign 0.9
+        yalign 0.8
+        alpha 0.0
+        linear 1.0 alpha 1.0
     c "blah"
-    return
