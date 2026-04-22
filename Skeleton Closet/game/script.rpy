@@ -6,15 +6,42 @@ image handMain:
     zoom .3
 
 image firstRoom:
-    "test.png"
+    "firstRoom.png"
     zoom .5
 
 image Mom:
     "mom.png"
     zoom .3
 
+image secondRoom:
+    "secondRoom.png"
 
+image yodaHighlight:
+    "yodaHighlight.png"
+    xpos 466
+    ypos 297
+    
+transform handWobble:
+    yoffset 0
+    linear 1 yoffset -8
+    linear 1 yoffset 8
+    linear 1 yoffset -8
+    linear 1 yoffset 8
+    repeat
 
+screen yodaSelect():
+    imagebutton:
+        xpos 466
+        ypos 297
+        xsize 200
+        ysize 200 
+        idle Solid("#00000000")
+        hover "yodaHighlight.png"
+        action Jump("yodaClick")
+
+label yodaClick:
+    c "That's my lego yoda I built a while back."
+    c "Better check out that closet."
 
 
 
@@ -22,7 +49,8 @@ image Mom:
 
 label start:
 
-
+    scene firstRoom with fade:
+        xysize(1920,1080)
     show Mom at left
 
     c "I'm 16 at this point I'm too old for bedtime stories."
@@ -64,11 +92,11 @@ label sleep:
 label checking:
     scene black with fade
     play sound "audio/gettingup.mp3"
-    scene test with fade:
-        xysize(1920, 1080)
-    show handMain:
+    scene secondRoom with fade
+    show handMain at handWobble:
         xalign 0.9
-        yalign 0.8
+        yalign 0.7
         alpha 0.0
-        linear 1.0 alpha 1.0
+        linear 0.5 alpha 1.0  
+    call screen yodaSelect       
     c "blah"

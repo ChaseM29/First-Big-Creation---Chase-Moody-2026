@@ -11,6 +11,8 @@
 ## title, and shows up in the interface and error reports.
 ##
 ## The _() surrounding the string marks it as eligible for translation.
+define config.screen_width = 1920
+define config.screen_height = 1080
 
 define config.name = _("Skeleton Closet")
 
