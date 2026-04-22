@@ -16,11 +16,29 @@ image Mom:
 image secondRoom:
     "secondRoom.png"
 
+image thirdRoom:
+    "thirdRoom.png"
+
 image yodaHighlight:
     "yodaHighlight.png"
-    xpos 466
-    ypos 297
-    
+    xanchor 0.0
+    yanchor 0.0
+
+image yodaStill:
+    "yodaStill.png"
+    xanchor 0.0
+    yanchor 0.0
+
+image closetStill:
+    "closetStill.png"
+    xanchor 0.0
+    yanchor 0.0
+
+image closetHighlight:
+    "closetHighlight.png"
+    xanchor 0.0
+    yanchor 0.0
+
 transform handWobble:
     yoffset 0
     linear 1 yoffset -8
@@ -29,19 +47,52 @@ transform handWobble:
     linear 1 yoffset 8
     repeat
 
-screen yodaSelect():
+screen clickableArea():
     imagebutton:
-        xpos 466
-        ypos 297
-        xsize 200
-        ysize 200 
-        idle Solid("#00000000")
+        idle "yodaStill.png"
         hover "yodaHighlight.png"
-        action Jump("yodaClick")
+        focus_mask True
+        action Return("yoda")
 
-label yodaClick:
-    c "That's my lego yoda I built a while back."
-    c "Better check out that closet."
+    imagebutton:
+        idle "closetStill.png"
+        hover "closetHighlight.png"
+        focus_mask True
+        action Return("closet")
+
+    imagebutton:
+        idle "doorStill.png"
+        hover "doorHighlight.png"
+        focus_mask True
+        action Return("door")
+
+    imagebutton:
+        idle "boneStill.png"
+        hover "boneHighlight.png"
+        focus_mask True
+        action Return("bone")
+    
+    imagebutton:
+        idle "dogStill.png"
+        hover "dogHighlight.png"
+        focus_mask True
+        action Return("dog")
+
+    
+
+label closetClick:
+    scene black with fade
+    play sound "audio/twosteps.mp3"
+    scene thirdRoom with fade
+    show handMain at handWobble:
+        xalign 0.9
+        yalign 0.7
+        alpha 0.0
+        linear 0.5 alpha 1.0  
+    return
+    
+    
+
 
 
 
@@ -51,7 +102,14 @@ label start:
 
     scene firstRoom with fade:
         xysize(1920,1080)
-    show Mom at left
+    
+    c "I'll be sleeping soon"
+
+    play sound "audio/knock.mp3"
+
+    c "come in"
+
+    show Mom at left with dissolve
 
     c "I'm 16 at this point I'm too old for bedtime stories."
 
@@ -69,7 +127,7 @@ label start:
 
     m "Goodnight honey."
 
-    hide Mom
+    hide Mom with dissolve
 
     c "What the heck was that."
 
@@ -92,11 +150,33 @@ label sleep:
 label checking:
     scene black with fade
     play sound "audio/gettingup.mp3"
+    play music "audio/backgroundmusic.mp3" fadein 5 fadeout 5 volume 0.03 loop
     scene secondRoom with fade
     show handMain at handWobble:
         xalign 0.9
         yalign 0.7
         alpha 0.0
         linear 0.5 alpha 1.0  
-    call screen yodaSelect       
+    call screen clickableArea 
+    $ choice = None
+
+    while choice != "closet":
+
+        call screen clickableArea
+        $ choice = _return
+
+        if choice == "yoda":
+            play sound "audio/neutralGrunt.mp3" volume 0.5
+            c "That's my lego yoda I built a while back."
+        if choice == "door":
+            play sound "audio/nogrunt.mp3" volume 0.1
+            c "I'm either sleeping scared or double checking the closet."
+        if choice == "bone":
+            c "One of my dogs chew toys... where is he?"
+        if choice == "dog":
+            play sound "audio/neutralGrunt.mp3" volume 0.5
+            c "There you are boy."
+            play sound "audio/bark.mp3" volume 0.3
+    if choice == "closet":
+        call closetClick
     c "blah"
