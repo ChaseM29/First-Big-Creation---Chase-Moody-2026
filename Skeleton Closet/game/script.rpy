@@ -1,23 +1,35 @@
 ﻿define m = Character("Mom")
 define c = Character("Me")
+define s = Character("Skeleton")
 
 image handMain:
     "handMain.png"
+    zoom .3
+
+image handScared:
+    "handScared.png"
+    zoom .2
+
+image skeleton:
+    "skeleton.png"
+    zoom.15
+
+image Mom:
+    "mom.png"
     zoom .3
 
 image firstRoom:
     "firstRoom.png"
     zoom .5
 
-image Mom:
-    "mom.png"
-    zoom .3
-
 image secondRoom:
     "secondRoom.png"
 
 image thirdRoom:
     "thirdRoom.png"
+
+image fourthRoom:
+    "fourthRoom.png"
 
 image yodaHighlight:
     "yodaHighlight.png"
@@ -46,6 +58,11 @@ transform handWobble:
     linear 1 yoffset -8
     linear 1 yoffset 8
     repeat
+
+
+transform handFadeIn:
+    alpha 0.0
+    linear 0.5 alpha 1.0
 
 screen clickableArea():
     imagebutton:
@@ -78,6 +95,24 @@ screen clickableArea():
         focus_mask True
         action Return("dog")
 
+screen clickableArea2():
+    imagebutton:
+        idle "clothesStill.png"
+        hover "clothesHighlight.png"
+        focus_mask True
+        action Return("clothes")
+    add "handMain.png" at handWobble, handFadeIn:
+        xalign 0.9
+        yalign 0.7
+        zoom .3
+
+screen clickableArea3():
+    imagebutton:
+        idle "skeletonStill.png"
+        hover "skeletonHighlight.png"
+        focus_mask True
+        action Return("skeleton")
+
     
 
 label closetClick:
@@ -90,7 +125,21 @@ label closetClick:
         alpha 0.0
         linear 0.5 alpha 1.0  
     return
-    
+
+label clothesClick:
+    scene black with fade
+    play sound "audio/movingClothes.mp3"
+    scene fourthRoom with fade
+    show handScared at handWobble:
+        xalign 1.0
+        yalign 0.7
+        alpha 0.0
+        linear 0.5 alpha 1.0  
+    return
+
+label skeletonClick:
+    scene black with fade
+    c "blah"
     
 
 
@@ -107,31 +156,43 @@ label start:
 
     play sound "audio/knock.mp3"
 
-    c "come in"
+    pause 1
+
+    c "Come in"
+
+    play sound "audio/door.mp3"
 
     show Mom at left with dissolve
 
+    m "What do you wanna read this time?"
+
+    c "Not this again."
+
     c "I'm 16 at this point I'm too old for bedtime stories."
 
-    m "Since you're all grown-up, how about I tell you this horror story from when I was growing up."
+    m "Oh, well since you're all grown-up, how about I tell you this horror story from when I was growing up."
 
-    c "Fine, at least sounds more inter-"
+    c "Fine, that at least sounds more interesting."
 
-    m "THERE'S A SKELETON IN YOUR CLOSET!!"
+    play sound "audio/momScream.mp3"
+    pause 1
+    m "{b}THERE'S A SKELETON IN YOUR CLOSET!!{/b}"
 
-    c "..."
+    c "WOAH"
 
     m "..."
 
-    c "That's hardly a story."
+    c "That's hardly a story! Why would you scream like that!"
 
     m "Goodnight honey."
 
     hide Mom with dissolve
 
+    play sound "audio/door.mp3"
+
     c "What the heck was that."
 
-    c "I can't sleep on that note. I think I should check."
+    c "Dammit now I don't think I can sleep, let me check the closet."
 
     menu:
         "Go to sleep":
@@ -144,13 +205,13 @@ label start:
 
 label sleep:
     scene black with fade
-    "{b}Game over{/b}."
+    "{b}Best ending.{/b}."
     return
 
 label checking:
     scene black with fade
     play sound "audio/gettingup.mp3"
-    play music "audio/backgroundmusic.mp3" fadein 5 fadeout 5 volume 0.03 loop
+    play music "audio/backgroundmusic.mp3" fadein 5 fadeout 20 volume 0.03 loop
     scene secondRoom with fade
     show handMain at handWobble:
         xalign 0.9
@@ -179,4 +240,46 @@ label checking:
             play sound "audio/bark.mp3" volume 0.3
     if choice == "closet":
         call closetClick
-    c "blah"
+
+    call screen clickableArea2 
+    $ choice = _return
+    if choice == "clothes":
+        call clothesClick
+    play sound "audio/yell.mp3"
+    c "Damn!!! Mom must've put this here." 
+    c "But I don't know, it looks almost..."
+    hide handScared with dissolve
+    show handMain at handWobble:
+        xalign 0.9
+        yalign 0.7
+        alpha 0.0
+        linear 0.5 alpha 1.0 
+
+    menu:
+        "Touch it":
+            jump touched
+        "No way":
+            jump noTouch
+    
+    label touched:
+        call screen clickableArea3
+        $ choice = _return
+        if choice == "skeleton":
+            call skeletonClick
+        
+
+    label noTouch:
+        s "Where are you going..."
+        s "You remember me...?"
+        s "Or rather... Actually... Maybe not"
+        s "I remember you..."
+        s "Unfortunately I am inescapable..."
+        c "..."
+        c "WHAT THE HELL"
+        c "WHAT IS THIS!?"
+        c "I didn't do anything!"
+        c "Leave me the hell alo-"
+        scene black
+        c "blah"
+
+        
