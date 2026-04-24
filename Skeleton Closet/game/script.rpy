@@ -1,6 +1,7 @@
 ﻿define m = Character("Mom")
 define c = Character("Me")
 define s = Character("Skeleton")
+define h = Character("Him")
 
 image handMain:
     "handMain.png"
@@ -16,7 +17,7 @@ image skeleton:
 
 image Mom:
     "mom.png"
-    zoom .3
+    zoom .27
 
 image firstRoom:
     "firstRoom.png"
@@ -30,6 +31,12 @@ image thirdRoom:
 
 image fourthRoom:
     "fourthRoom.png"
+
+image fifthRoom:
+    "fifthRoom.png"
+
+image sixthRoom:
+    "sixthRoom.png"
 
 image yodaHighlight:
     "yodaHighlight.png"
@@ -113,7 +120,31 @@ screen clickableArea3():
         focus_mask True
         action Return("skeleton")
 
-    
+screen clickableArea4():
+    imagebutton:
+        idle "printerStill.png"
+        hover "printerHighlight.png"
+        focus_mask True
+        action Return("printer")
+    imagebutton:
+        idle "deskStill.png"
+        hover "deskHighlight.png"
+        focus_mask True
+        action Return("desk")
+    imagebutton:
+        idle "windowStill.png"
+        hover "windowHighlight.png"
+        focus_mask True
+        action Return("window")
+
+
+init python:
+    def drag_placed(drags, drop):
+        if not drop:
+            return
+        store.draggable = drags[0].drag_name
+        store.droppable = drop.drag_name
+        return True
 
 label closetClick:
     scene black with fade
@@ -139,7 +170,40 @@ label clothesClick:
 
 label skeletonClick:
     scene black with fade
-    c "blah"
+    jump officeStart
+
+label deskClick:
+    scene black with fade
+    scene sixthRoom with fade
+    jump search
+
+
+
+define longFade = Fade(0.5, 0.0, 6)
+
+screen dragArea: 
+    draggroup:
+        drag:
+            droppable False
+            dragged drag_placed
+            xpos 100 ypos 100
+            drag_offscreen(50, -50, 50, -400)
+            add "test.png" zoom .3
+        drag:
+            droppable False
+            dragged drag_placed
+            xpos 1000 ypos 1
+            drag_offscreen(50, -50, 0, -450)
+            add "paperC.png" zoom .3
+        drag:
+            droppable False
+            dragged drag_placed
+            xpos 500 ypos 100
+            drag_offscreen(50, -50, 50, -440)
+            add "notebook.png" zoom .3
+        
+
+
     
 
 
@@ -152,6 +216,8 @@ label start:
     scene firstRoom with fade:
         xysize(1920,1080)
     
+    #add crickets music
+
     c "I'll be sleeping soon"
 
     play sound "audio/knock.mp3"
@@ -174,7 +240,7 @@ label start:
 
     c "Fine, that at least sounds more interesting."
 
-    play sound "audio/momScream.mp3"
+    play sound "audio/momScream.mp3" volume 0.25
     pause 1
     m "{b}THERE'S A SKELETON IN YOUR CLOSET!!{/b}"
 
@@ -182,7 +248,7 @@ label start:
 
     m "..."
 
-    c "That's hardly a story! Why would you scream like that!"
+    c "That's not even a story! Why would you scream like that!"
 
     m "Goodnight honey."
 
@@ -204,9 +270,17 @@ label start:
 
 
 label sleep:
+    c "Whatever."
+    #add yawn
     scene black with fade
-    "{b}Best ending.{/b}."
-    return
+    #add warbling music
+    show skeleton with longFade
+    s "WAKE UP" with None
+    scene firstRoom:
+        xysize(1920, 1080)
+    c "What the HELL."
+    c "Now I've gotta check."
+    jump checking
 
 label checking:
     scene black with fade
@@ -266,6 +340,7 @@ label checking:
         $ choice = _return
         if choice == "skeleton":
             call skeletonClick
+            jump officeStart
         
 
     label noTouch:
@@ -280,6 +355,55 @@ label checking:
         c "I didn't do anything!"
         c "Leave me the hell alo-"
         scene black
-        c "blah"
+        jump officeStart
+    
+    label officeStart:
+        stop music fadeout 7
+        scene fifthRoom with longFade
+        c "where"
+        c "no"
+        c "not here"
+        c "i'm sorry"
+        
+        s "You seemed so forgetful {b}EARLIER{\b}."
+
+        c "please..."
+
+        #Make hand less confident
+
+        show handMain at handWobble:
+            xalign 0.9
+            yalign 0.7
+            alpha 0.0
+            linear 0.5 alpha 1.0  
+        
+        h "Find it."
+
+        #After click to go to desk
+
+        c "please"
+
+        h "{b}SEARCH{\b}"
+
+        call screen clickableArea4
+        while choice != "desk":
+            call screen clickableArea4
+            $ choice = _return
+
+            if choice == "window":
+                s "It was a sunny day. Broad daylight didn't scare you."
+            if choice == "printer":
+                s "I loved that printer."
+        if choice == "desk":
+            jump deskClick
+
+        label search:
+            call screen dragArea
+
+
+
+        
+
+
 
         
