@@ -201,6 +201,13 @@ screen dragArea:
             xpos 500 ypos 100
             drag_offscreen(50, -50, 50, -440)
             add "notebook.png" zoom .3
+        drag:
+            droppable False
+            dragged drag_placed
+            xpos 500 ypos 100
+            drag_offscreen(50, -50, 50, -440)
+            add "backpack.png" zoom .6
+
         
 
 
@@ -216,7 +223,7 @@ label start:
     scene firstRoom with fade:
         xysize(1920,1080)
     
-    #add crickets music
+    play music "audio/crickets.mp3" volume 0.01 fadein 7
 
     c "I'll be sleeping soon"
 
@@ -224,41 +231,43 @@ label start:
 
     pause 1
 
-    c "Come in"
+    c "Come in."
 
     play sound "audio/door.mp3"
 
     show Mom at left with dissolve
 
+
     m "What do you wanna read this time?"
 
-    c "Not this again."
+    c "Not this again mom. I'm 16 at this point I'm too old for bedtime stories."
 
-    c "I'm 16 at this point I'm too old for bedtime stories."
-
+    play sound "audio/momGrunt.mp3" volume 0.5
     m "Oh, well since you're all grown-up, how about I tell you this horror story from when I was growing up."
 
-    c "Fine, that at least sounds more interesting."
+    c "Hmmm."
+    c "Go on."
 
-    play sound "audio/momScream.mp3" volume 0.25
-    pause 1
-    m "{b}THERE'S A SKELETON IN YOUR CLOSET!!{/b}"
+    play sound "audio/momScream.mp3" volume 0.2
+    pause 1.2
+    m "{b}THERE'S A SKELETON IN YOUR CLOSET!{/b}"
 
-    c "WOAH"
+    c "{b}WOAH!{\b}"
 
     m "..."
 
-    c "That's not even a story! Why would you scream like that!"
+    c "That- That's not even a story. Why would you scream like that?"
 
+    play sound "audio/momAlright.mp3" volume 0.5
     m "Goodnight honey."
 
     hide Mom with dissolve
 
     play sound "audio/door.mp3"
 
-    c "What the heck was that."
+    c "What in the world was that dude."
 
-    c "Dammit now I don't think I can sleep, let me check the closet."
+    c "I don't think I can sleep now. Maybe I should check the closet."
 
     menu:
         "Go to sleep":
@@ -273,13 +282,15 @@ label sleep:
     c "Whatever."
     #add yawn
     scene black with fade
-    #add warbling music
+    play music "audio/lowWarble.mp3" fadein 5
     show skeleton with longFade
     s "WAKE UP" with None
+    stop music fadeout 0.5
     scene firstRoom:
         xysize(1920, 1080)
-    c "What the HELL."
-    c "Now I've gotta check."
+    c "What the HELL!"
+    play sound "audio/ugh.mp3"
+    c "Now I've {i}gotta{\i} check."
     jump checking
 
 label checking:
@@ -304,7 +315,7 @@ label checking:
             play sound "audio/neutralGrunt.mp3" volume 0.5
             c "That's my lego yoda I built a while back."
         if choice == "door":
-            play sound "audio/nogrunt.mp3" volume 0.1
+            play sound "audio/nogrunt.mp3" volume 0.3
             c "I'm either sleeping scared or double checking the closet."
         if choice == "bone":
             c "One of my dogs chew toys... where is he?"
@@ -321,7 +332,7 @@ label checking:
         call clothesClick
     play sound "audio/yell.mp3"
     c "Damn!!! Mom must've put this here." 
-    c "But I don't know, it looks almost..."
+    c "But, should I...?"
     hide handScared with dissolve
     show handMain at handWobble:
         xalign 0.9
@@ -344,13 +355,14 @@ label checking:
         
 
     label noTouch:
-        s "Where are you going..."
-        s "You remember me...?"
-        s "Or rather... Actually... Maybe not"
-        s "I remember you..."
-        s "Unfortunately I am inescapable..."
-        c "..."
-        c "WHAT THE HELL"
+        stop music fadeout 7
+        s "Where are you going?"
+        s "You remember me?"
+        s "Or rather... Actually... Maybe not. But {b}probably{\b}!"
+        s "I remember {b}you{\b}."
+        s "I am inescapable."
+        c "NO!"
+        c "WHAT THE HELL!?"
         c "WHAT IS THIS!?"
         c "I didn't do anything!"
         c "Leave me the hell alo-"
@@ -358,12 +370,13 @@ label checking:
         jump officeStart
     
     label officeStart:
-        stop music fadeout 7
+        play music "audio/lowWarble.mp3" volume 1 fadein 10
         scene fifthRoom with longFade
-        c "where"
-        c "no"
-        c "not here"
-        c "i'm sorry"
+        c "Where..."
+        c "I feel weak."
+        c "Oh no..."
+        c "Not here."
+        c "I'm sorry."
         
         s "You seemed so forgetful {b}EARLIER{\b}."
 
@@ -381,9 +394,10 @@ label checking:
 
         #After click to go to desk
 
-        c "please"
+        c "please no..."
 
-        h "{b}SEARCH{\b}"
+        play sound "audio/growl.mp3"
+        h "{b}FIND IT{\b}."
 
         call screen clickableArea4
         while choice != "desk":
