@@ -177,11 +177,20 @@ label deskClick:
     scene sixthRoom with fade
     jump search
 
+label ringClick:
+        jump continue
+
 
 
 define longFade = Fade(0.5, 0.0, 6)
 
 screen dragArea: 
+    imagebutton:
+        xpos 150 ypos 300
+        idle Transform("ringStill.png", zoom=.1)
+        hover Transform("ringHighlight.png", zoom=.1)
+        focus_mask True
+        action Return("ring")
     draggroup:
         drag:
             droppable False
@@ -208,6 +217,7 @@ screen dragArea:
             drag_offscreen(50, -50, 50, -440)
             add "backpack.png" zoom .6
 
+
         
 
 
@@ -223,7 +233,7 @@ label start:
     scene firstRoom with fade:
         xysize(1920,1080)
     
-    play music "audio/crickets.mp3" volume 0.01 fadein 7
+    play music "audio/crickets.mp3" volume 0.01 fadein 2
 
     c "I'll be sleeping soon"
 
@@ -242,7 +252,6 @@ label start:
 
     c "Not this again mom. I'm 16 at this point I'm too old for bedtime stories."
 
-    play sound "audio/momGrunt.mp3" volume 0.5
     m "Oh, well since you're all grown-up, how about I tell you this horror story from when I was growing up."
 
     c "Hmmm."
@@ -258,7 +267,6 @@ label start:
 
     c "That- That's not even a story. Why would you scream like that?"
 
-    play sound "audio/momAlright.mp3" volume 0.5
     m "Goodnight honey."
 
     hide Mom with dissolve
@@ -413,6 +421,24 @@ label checking:
 
         label search:
             call screen dragArea
+            $ choice = _return
+            if choice == "ring":
+                jump ringClick
+
+        label continue:
+            menu:
+                "Take it.":
+                    jump taken
+                "Dont take it.":
+                    jump notTaken
+        
+        label taken:
+            c "I needed it."
+            s "Did you need what comes next?"
+        label notTaken:
+            s "You serve only to anger me with lying."
+            s "That is not how it went."
+            jump continue
 
 
 
