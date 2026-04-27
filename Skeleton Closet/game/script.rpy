@@ -3,12 +3,18 @@ define c = Character("Me")
 define s = Character("Skeleton")
 define h = Character("Him")
 
+default clicks = 0
+
 image handMain:
     "handMain.png"
     zoom .3
 
 image handScared:
     "handScared.png"
+    zoom .2
+
+image handPunch:
+    "handPunch.png"
     zoom .2
 
 image skeleton:
@@ -68,6 +74,14 @@ transform handWobble:
 
 
 transform handFadeIn:
+    alpha 0.0
+    linear 0.5 alpha 1.0
+
+transform fadeIn:
+    alpha 0.0
+    linear 2 alpha 1.0
+
+transform fadeInFast:
     alpha 0.0
     linear 0.5 alpha 1.0
 
@@ -137,6 +151,14 @@ screen clickableArea4():
         focus_mask True
         action Return("window")
 
+screen clickableArea5():
+    imagebutton:
+        xpos 800
+        idle "securityStill.png"
+        hover "securityHighlight.png"
+        action Function(increaseClicks)
+        at fadeIn
+
 
 init python:
     def drag_placed(drags, drop):
@@ -191,31 +213,33 @@ screen dragArea:
         hover Transform("ringHighlight.png", zoom=.1)
         focus_mask True
         action Return("ring")
+        at fadeIn
     draggroup:
         drag:
             droppable False
             dragged drag_placed
             xpos 100 ypos 100
             drag_offscreen(50, -50, 50, -400)
-            add "test.png" zoom .3
+            add "test.png" zoom .3 at fadeInFast
         drag:
             droppable False
             dragged drag_placed
             xpos 1000 ypos 1
             drag_offscreen(50, -50, 0, -450)
-            add "paperC.png" zoom .3
+            add "paperC.png" zoom .3 at fadeInFast
         drag:
             droppable False
             dragged drag_placed
             xpos 500 ypos 100
             drag_offscreen(50, -50, 50, -440)
-            add "notebook.png" zoom .3
+            add "notebook.png" zoom .3 at fadeInFast
         drag:
             droppable False
             dragged drag_placed
             xpos 500 ypos 100
             drag_offscreen(50, -50, 50, -440)
-            add "backpack.png" zoom .6
+            add "backpack.png" zoom .6 at fadeInFast
+
 
 
         
@@ -386,7 +410,7 @@ label checking:
         c "Not here."
         c "I'm sorry."
         
-        s "You seemed so forgetful {b}EARLIER{\b}."
+        s "You seemed so forgetful earlier."
 
         c "please..."
 
@@ -413,9 +437,9 @@ label checking:
             $ choice = _return
 
             if choice == "window":
-                s "It was a sunny day. Broad daylight didn't scare you."
+                s "In broad daylight."
             if choice == "printer":
-                s "I loved that printer."
+                s "A nice printer."
         if choice == "desk":
             jump deskClick
 
@@ -435,10 +459,40 @@ label checking:
         label taken:
             c "I needed it."
             s "Did you need what comes next?"
+            c "It was impulsive I didn-"
+            s "Quiet."
+            scene black with fade
+            c "Please stop."
+            s "No."
+            show handPunch at handWobble:
+                xpos 1100
+                yalign 0.7
+                alpha 0.0
+                linear 0.5 alpha 1.0           
+            call screen clickableArea5
+
+        
+
         label notTaken:
             s "You serve only to anger me with lying."
             s "That is not how it went."
             jump continue
+        
+        init python:
+            def increaseClicks():
+                global clicks
+                clicks += 1
+                renpy.sound.play("punch.mp3")
+                if clicks >= 3:
+                    renpy.jump("threeClick")
+
+        label threeClick:
+            s "You got caught so you killed him."
+            s "You killed..."
+            show skeleton with fade
+            s "Me."
+            return
+        
 
 
 
