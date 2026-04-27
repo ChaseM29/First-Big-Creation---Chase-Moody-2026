@@ -327,6 +327,7 @@ label sleep:
 
 label checking:
     scene black with fade
+    stop music fadeout 5
     play sound "audio/gettingup.mp3"
     play music "audio/backgroundmusic.mp3" fadein 5 fadeout 20 volume 0.03 loop
     scene secondRoom with fade
@@ -402,7 +403,7 @@ label checking:
         jump officeStart
     
     label officeStart:
-        play music "audio/lowWarble.mp3" volume 1 fadein 10
+        play music "audio/lowWarble.mp3" volume 0.5 fadein 10
         scene fifthRoom with longFade
         c "Where..."
         c "I feel weak."
