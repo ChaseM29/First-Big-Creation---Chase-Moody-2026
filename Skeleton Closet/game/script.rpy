@@ -328,7 +328,7 @@ label sleep:
 label checking:
     scene black with fade
     stop music fadeout 5
-    play sound "audio/gettingup.mp3"
+    play sound "`audio/gettingup.mp3"
     play music "audio/backgroundmusic.mp3" fadein 5 fadeout 20 volume 0.03 loop
     scene secondRoom with fade
     show handMain at handWobble:
